@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>fonts loading strategy</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+								<section>
+									<h1>Fonts loading strategies</h1>
+									<img src="./img/googlefonts.jpg" style="border: none; box-shadow: none;">
+								</section>
+								
+								<section>
+									<section>
+										<h1>Terms</h1>
+									</section>
+
+									<section>
+										<h2>System fonts</h2>
+										<p>Fonts available locally on an operating system without making any network requests.</p>
+									</section>
+
+									<section>
+										<img src="./img/system.png" style="border: none; box-shadow: none;">
+									</section>
+
+									<section>
+										<h2>FOIT</h2>
+										<p>Flash of Invisible Text</p>
+										<img src="./img/foit.gif" style="border: none; box-shadow: none;">
+									</section>
+
+									<section>
+										<h2>FOUT</h2>
+										<p>Flash of Unstyled Text</p>
+										<img src="./img/fout.gif" style="border: none; box-shadow: none;">
+									</section>
+
+									<section data-background-iframe="https://zachleat.com/foitfout/" data-background-interactive>
+										<div
+											style="position: absolute; width: 30%; right: 0; top: -100px; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+											<h2 style="color: #fff;"><b>demo</b>: FOIT and FOUT comparison</h2>
+										</div>
+									</section>
+
+									<section>
+										<h2>FOIT vs. FOUT ?</h2>
+										<a href="https://zachleat.com/foitfout/"><b>demo</b>: FOIT and FOUT comparison</a>
+									</section>
+									
+									<section>
+										<h2>FOFT</h2>
+										<p>Flash of Faux Text</p>
+										<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
+									</section>
+								</section>
+
+								<section>
+									<section>
+										<h1>Strategies</h1>
+									</section>
+
+									<section>
+										<h2>Just use system fonts 🤔</h2>
+										<p style="color: #666; font-size: 34px;">instead of the custom fonts</p>
+										<pre><code class="css" data-trim>
+											font-family:
+												-apple-system, BlinkMacSystemFont, Segoe UI,
+												Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+												Droid Sans, Helvetica Neue, sans-serif;
+														</code></pre>
+									</section>
+
+									<section>
+										<h2>Just use system fonts 🤔</h2>
+										<img src="./img/system-fonts.png" style="border: none; box-shadow: none;">
+									</section>
+
+									<section>
+										<h2>System fonts: pros and cons</h2>
+										<p style="font-size: 36px; text-align: left;">👍 Super simple: just use <code>font-family</code> without <code>@font-face</code>.</p>
+										<p style="font-size: 36px; text-align: left;">👍 Perfect rendering performance: no worries about FOUT/FOIT.</p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 Limited availability. Very few system fonts are available cross platform.</p>
+									</section>
+								</section>
+
+								<section>
+									<section>
+										<h2>Unceremonious <code>@font-face</code></h2>
+										<p style="color: #666; font-size: 30px; letter-spacing: 0.2px;">Just add a CSS <code>@font-face</code> block with WOFF and WOFF2 formats</p>
+										<pre><code class="css" data-trim>
+@font-face {
+	font-family: FontName;
+	src: url('fontname.woff2') format('woff2'),
+	     url('fontname.woff') format('woff');
+}
+										</code></pre>
+									</section>
+
+									<section>
+										<img src="./img/woff.png" style="border: none; box-shadow: none;" height="300">
+										<img src="./img/woff2.png" style="border: none; box-shadow: none;" height="300">
+									</section>
+
+									<section>
+										<h2>Unceremonious <code>@font-face</code>: pros and cons</h2>
+										<p style="font-size: 36px; text-align: left;">👍 Good rendering performance in IE and Edge: <b>no FOIT</b></p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 Bad rendering performance <b>everywhere else</b>: maximum 3 second FOIT in most modern browsers (and switches to FOUT if load takes longer)</p>
+									</section>
+								</section>
+
+								<section>
+									<section>
+										<h2><code>font-display</code></h2>
+										<p style="color: #666; font-size: 25px;"><code>font-display</code> currently supports the following range of values:<br><code>auto | block | swap | fallback | optional</code></p>
+										<p  style="font-size: 25px;">Add <code style="font-weight: bold;">font-display: swap</code> to switch to FOUT on browsers that support it:</p>
+										<pre><code class="css" data-trim data-line-numbers="4-5">
+@font-face {
+	font-family: FontName;
+
+	/* Define how the browser behaves during download: */
+	font-display: swap;
+
+	src: url(FontName.woff2) format('woff2');
+}
+										</code></pre>
+									</section>
+									
+									<section>
+										<h2><code>font-display</code></h2>
+										<img src="./img/font-display-2.png" style="border: none; box-shadow: none;">
+									</section>
+
+									<section>
+										<h2><code>font-display</code></h2>
+										<img src="./img/font-display-3.png" style="border: none; box-shadow: none;" height="500">
+									</section>
+
+									<section>
+										<h3>Good news: Google Fonts<br>added <code>font-display</code> 🎉</h3>
+										<p style="font-size: 25px;">Since May 2019 you can use <code style="font-weight: bold;">font-display: swap</code> with Google Fonts:</p>
+
+									<pre><code class="html" style="font-size: 20px;" data-trim>
+&lt;link
+  href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+  rel="stylesheet"&gt;
+										</code></pre>
+										<p style="color: #666; font-size: 25px;">* note that URL parameter is named <code
+												style="font-weight: bold;">display</code></p>
+									</section>
+									
+									<section>
+										<h2><code>font-display</code></h2>
+										<!-- <p style="color: #666; font-size: 36px;">but support is still rather weak</p> -->
+										<img src="./img/font-display.png" style="border: none; box-shadow: none;">
+									</section>
+
+									<section>
+										<h2><code>font-display</code>: pros and cons</h2>
+										<p style="font-size: 36px; text-align: left;">👍 very simple and gives us FOUT without any JavaScript</p>
+										<p style="font-size: 36px; text-align: left;">👍 future friendly</p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 still not very good browser support</p>
+									</section>
+								</section>
+
+								<section>
+									<section></section>
+
+								</section>
+
+<!-- <section>
+									<h2>FOIT</h2>
+									<p>Flash of invisible text</p>
+									<img src="./img/foit.gif" style="border: none; box-shadow: none;">
+								</section>
+
+								<section>
+									<h2>FOUT</h2>
+									<p>Flash of unstyled text</p>
+									<img src="./img/fout.gif" style="border: none; box-shadow: none;">
+								</section>
+
+								<section>
+									<h2>FOFT</h2>
+									<p>Flash of faux text</p>
+									<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
+								</section> -->
+
+<!-- <section>
+									<h3>Font style matcher</h3>
+									<p style="color: #666; font-size: 25px;">For example, Merriweather font is taller and wider than Georgia, so if you bump Georgia's font size up to 18px,
+									and its letter spacing to 0.1px you'll get a pretty close match:</p>
+									<img src="./img/FSM.png" style="border: none; box-shadow: none;">
+									<p style="font-size: 25px;"><a href="https://meowni.ca/font-style-matcher/">https://meowni.ca/font-style-matcher/</a>
+									</p>
+								</section> -->
+
+
+								<section>
+									<h2>Optimal solution 👌</h2>
+									<ul>
+										<li>1</li>
+										<li>2</li>
+									</ul>
+								</section>
+
+			</div>
+
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true },
+					{ src: 'plugin/search/search.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
