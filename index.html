@@ -43,20 +43,20 @@
 									<img src="./img/googlefonts.jpg" style="border: none; box-shadow: none;">
 								</section>
 								
-								<section>
-									<section>
+								<!-- <section> -->
+									<!-- <section>
 										<h1>Terms</h1>
-									</section>
-
+									</section> -->
+<!-- 
 									<section>
 										<h2>System fonts</h2>
 										<p>Fonts available locally on an operating system without making any network requests.</p>
-									</section>
-
+									</section> -->
+<!-- 
 									<section>
 										<img src="./img/system.png" style="border: none; box-shadow: none;">
-									</section>
-
+									</section> -->
+									
 									<section>
 										<h2>FOIT</h2>
 										<p>Flash of Invisible Text</p>
@@ -69,6 +69,8 @@
 										<img src="./img/fout.gif" style="border: none; box-shadow: none;">
 									</section>
 
+
+
 									<section data-background-iframe="https://zachleat.com/foitfout/" data-background-interactive>
 										<div
 											style="position: absolute; width: 30%; right: 0; top: -100px; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
@@ -76,19 +78,21 @@
 										</div>
 									</section>
 
-									<section>
+									<!-- <section>
 										<h2>FOIT vs. FOUT ?</h2>
 										<a href="https://zachleat.com/foitfout/"><b>demo</b>: FOIT and FOUT comparison</a>
 									</section>
-									
-									<section>
+									 -->
+
+									 <!-- <section>
 										<h2>FOFT</h2>
 										<p>Flash of Faux Text</p>
 										<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
-									</section>
-								</section>
+									</section> -->
 
-								<section>
+								<!-- </section> -->
+
+								<!-- <section> -->
 									<section>
 										<h1>Strategies</h1>
 									</section>
@@ -105,7 +109,7 @@
 									</section>
 
 									<section>
-										<h2>Just use system fonts 🤔</h2>
+										<h2>System fonts<br>on different OS</h2>
 										<img src="./img/system-fonts.png" style="border: none; box-shadow: none;">
 									</section>
 
@@ -116,10 +120,174 @@
 										<hr>
 										<p style="font-size: 36px; text-align: left;">👎 Limited availability. Very few system fonts are available cross platform.</p>
 									</section>
-								</section>
+
+								<!-- minimize font size -->
+
+									<section>
+										<h2><span style="font-size: 55px; display: inline-block; margin-bottom: 30px;">🐢🐇</span><br>MAKE FONT FILES SMALLER</h2>
+										<p style="color: #666; font-size: 34px;">Reduce webfont load time</p>
+									</section>
+									
+									<section>
+										<h3><em>Strategy:</em> Use WOFF2 and WOFF formats</h3>
+
+										<p style="color: #666; font-size: 34px;">WOFF = Web Open Font Format</p>
+									</section>
+									<section>
+										<img src="./img/woff.png" style="border: none; box-shadow: none;" height="300">
+										<img src="./img/woff2.png" style="border: none; box-shadow: none;" height="300">
+									</section>
+
+									<section>	
+										<h3><em>Strategy:</em> Subset your fonts</h3>
+										<p style="color: #666; font-size: 30px;">(if language and licensing requirements allow)</p>									
+										<ul style="line-height: 140%; font-size: 34px; list-style-type: square;">
+											<li>Use only the <b>fonts</b> you actually need</li>
+											<li>You can also only load the <b>symbols</b> you need (for example, only symbols of one specific language)</li>
+										</ul>
+									</section>
+
+									<section>
+										<h3>Fonts Subsetting</h3>
+										<img src="./img/subsetting.jpg" style="border: none; box-shadow: none;" height="600">
+									</section>
+
+
+									<section>
+										<h2><span style="font-size: 55px; display: inline-block; margin-bottom: 30px;">🚦</span><br> START IMPORTANT<br>FONT DOWNLOADS EARLIER</h2>
+									</section>
+
+									<section>
+										<h2><em>Strategy:</em> Use <code>preload</code></h2>
+										<p style="color: #666;">Add <code class="css">&lt;link rel="preload"&gt;</code><br>to fetch your font sooner:</p>
+<pre><code>
+<link rel="preload" href="font.woff2"
+as="font"
+type="font/woff2">
+</code></pre>
+									</section>
+
+									<section>
+										<h2><code>preload</code>: pros and cons</h2>
+										<p style="font-size: 36px; text-align: left;">👍 Super easy</p>
+										<p style="font-size: 36px; text-align: left;">👍 Better rendering performance than just a <code>@font-face</code> block. Webfonts are requested higher up in the waterfall.</p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 Not sufficient by itself.</p>
+									</section>
+
+
+									<!--  -->
+
+									<section>
+										<h2><span style="font-size: 55px;">🚀</span><br>PRIORITIZE READABLE TEXT</h2>
+										<p style="color: #666; font-size: 34px;">Control the behavior while a webfont is loading:<b> NO invisible text</b></p>
+									</section>
+
+										<section>
+											<h3><em>Strategy:</em> Use <code>font-display</code></h3>
+											<p style="color: #666; font-size: 25px;"><code>font-display</code> currently supports the following range of
+												values:<br><code>auto | block | swap | fallback | optional</code></p>
+											<p style="font-size: 25px;">Add <code style="font-weight: bold;">font-display: swap</code> to switch to FOUT on
+												browsers that support it:</p>
+											<pre><code class="css" data-trim data-line-numbers="4-5">
+										@font-face {
+											font-family: FontName;
+										
+											/* Define how the browser behaves during download: */
+											font-display: swap;
+										
+											src: url(FontName.woff2) format('woff2');
+										}
+																				</code></pre>
+										</section>
+										
+										<!-- <section>
+											<h2><code>font-display</code></h2>
+											<img src="./img/font-display-2.png" style="border: none; box-shadow: none;">
+										</section>
+										 -->
+										<!-- <section>
+											<h2><code>font-display</code></h2>
+											<img src="./img/font-display-3.png" style="border: none; box-shadow: none;" height="500">
+										</section>
+										 -->
+										<!-- <section>
+											<h3>Good news: Google Fonts<br>added <code>font-display</code> 🎉</h3>
+											<p style="font-size: 25px;">Since May 2019 you can use <code style="font-weight: bold;">font-display: swap</code> with
+												Google Fonts:</p>
+										
+											<pre><code class="html" style="font-size: 20px;" data-trim>
+										&lt;link
+										  href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+										  rel="stylesheet"&gt;
+																				</code></pre>
+											<p style="color: #666; font-size: 25px;">* note that URL parameter is named <code
+													style="font-weight: bold;">display</code></p>
+										</section> -->
+										
+										<section>
+											<h2><code>font-display</code></h2>
+											<img src="./img/font-display.png" style="border: none; box-shadow: none;">
+										</section>
+										
+										<section>
+											<h2><code>font-display</code>: pros and cons</h2>
+											<p style="font-size: 36px; text-align: left;">👍 very simple and gives us FOUT without any JavaScript</p>
+											<p style="font-size: 36px; text-align: left;">👍 future friendly</p>
+											<hr>
+											<p style="font-size: 36px; text-align: left;">👎 still not very good browser support</p>
+										</section>
+									
+
+									<!--  -->
+									<section>
+										<h3><em>Strategy:</em> Use the<br>CSS Font Loading API</h3>
+										<img src="./img/FLAPI.png" style="border: none; box-shadow: none; margin-top: 0; margin-bottom: 0; height: 230px;">
+										<img src="./img/FLAPI2.png" style="border: none; box-shadow: none; margin-top: 0; height: 230px;">	
+									</section>
+
+									<section>
+										<h3>CSS Font Loading API</h3>
+
+										<p style="font-size: 36px; text-align: left;">👍 Protects from FOIT</p>
+										<p style="font-size: 36px; text-align: left;">👍Easy to group requests into a single repaint (just use one class for multiple web font loads)</p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 Needs strict control. A single use of a <code>font-family</code> without the <code>loaded</code> class will likely trigger a FOIT.</p>
+									</section>
+
+								<!-- <section> -->
+									<section>
+										<h2><span style="font-size: 55px; display: inline-block; margin-bottom: 30px;">🏁</span><br> REDUCE MOVEMENT<br>DURING PAGE LOAD</h2>
+										<p style="color: #666; font-size: 34px; ">Control behavior after a web font has loaded</p>
+									
+										<ul>
+											<li>
+Each independent @font-face block has its own loading life-cycle: own FOIT, FOUT, repaint and reflow. 
+											</li>
+											<li>When using 2 or more web fonts for a single family, it’s important to group the repaints together.</li>
+										</ul>
+									</section>
+
+									<section>
+										<h3><em>Strategy:</em> Use the<br>CSS Font Loading API</h3>
+										<p style="color: #666; font-size: 34px; ">to group your repaints</p>
+									</section>
+								
+									<section>
+										<h3><em>Strategy:</em> Use Variable fonts</h3>
+									</section>
+
 
 								<section>
-									<section>
+									<h2>Optimal solution 👌</h2>
+									<ul style="line-height: 160%; font-size: 36px; list-style-type: square;">
+										<li>Download the fonts as WOFF2 and WOFF</li>
+										<li>Add <code class="css">&lt;link rel="preload"&gt;</code></li>
+										<li>Add <code class="css">@font-face</code> declaration with <code class="css">font-display: swap;</code></li>
+										<li>Use <code class="css">font-family</code> normally in rest of document</li>
+									</ul>
+								</section>
+									<!-- <section>
 										<h2>Unceremonious <code>@font-face</code></h2>
 										<p style="color: #666; font-size: 30px; letter-spacing: 0.2px;">Just add a CSS <code>@font-face</code> block with WOFF and WOFF2 formats</p>
 										<pre><code class="css" data-trim>
@@ -131,78 +299,16 @@
 										</code></pre>
 									</section>
 
-									<section>
-										<img src="./img/woff.png" style="border: none; box-shadow: none;" height="300">
-										<img src="./img/woff2.png" style="border: none; box-shadow: none;" height="300">
-									</section>
+
 
 									<section>
 										<h2>Unceremonious <code>@font-face</code>: pros and cons</h2>
 										<p style="font-size: 36px; text-align: left;">👍 Good rendering performance in IE and Edge: <b>no FOIT</b></p>
 										<hr>
 										<p style="font-size: 36px; text-align: left;">👎 Bad rendering performance <b>everywhere else</b>: maximum 3 second FOIT in most modern browsers (and switches to FOUT if load takes longer)</p>
-									</section>
-								</section>
+									</section> -->
 
-								<section>
-									<section>
-										<h2><code>font-display</code></h2>
-										<p style="color: #666; font-size: 25px;"><code>font-display</code> currently supports the following range of values:<br><code>auto | block | swap | fallback | optional</code></p>
-										<p  style="font-size: 25px;">Add <code style="font-weight: bold;">font-display: swap</code> to switch to FOUT on browsers that support it:</p>
-										<pre><code class="css" data-trim data-line-numbers="4-5">
-@font-face {
-	font-family: FontName;
 
-	/* Define how the browser behaves during download: */
-	font-display: swap;
-
-	src: url(FontName.woff2) format('woff2');
-}
-										</code></pre>
-									</section>
-									
-									<section>
-										<h2><code>font-display</code></h2>
-										<img src="./img/font-display-2.png" style="border: none; box-shadow: none;">
-									</section>
-
-									<section>
-										<h2><code>font-display</code></h2>
-										<img src="./img/font-display-3.png" style="border: none; box-shadow: none;" height="500">
-									</section>
-
-									<section>
-										<h3>Good news: Google Fonts<br>added <code>font-display</code> 🎉</h3>
-										<p style="font-size: 25px;">Since May 2019 you can use <code style="font-weight: bold;">font-display: swap</code> with Google Fonts:</p>
-
-									<pre><code class="html" style="font-size: 20px;" data-trim>
-&lt;link
-  href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
-  rel="stylesheet"&gt;
-										</code></pre>
-										<p style="color: #666; font-size: 25px;">* note that URL parameter is named <code
-												style="font-weight: bold;">display</code></p>
-									</section>
-									
-									<section>
-										<h2><code>font-display</code></h2>
-										<!-- <p style="color: #666; font-size: 36px;">but support is still rather weak</p> -->
-										<img src="./img/font-display.png" style="border: none; box-shadow: none;">
-									</section>
-
-									<section>
-										<h2><code>font-display</code>: pros and cons</h2>
-										<p style="font-size: 36px; text-align: left;">👍 very simple and gives us FOUT without any JavaScript</p>
-										<p style="font-size: 36px; text-align: left;">👍 future friendly</p>
-										<hr>
-										<p style="font-size: 36px; text-align: left;">👎 still not very good browser support</p>
-									</section>
-								</section>
-
-								<section>
-									<section></section>
-
-								</section>
 
 <!-- <section>
 									<h2>FOIT</h2>
@@ -232,13 +338,6 @@
 								</section> -->
 
 
-								<section>
-									<h2>Optimal solution 👌</h2>
-									<ul>
-										<li>1</li>
-										<li>2</li>
-									</ul>
-								</section>
 
 			</div>
 
