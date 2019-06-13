@@ -42,20 +42,7 @@
 									<h1>Fonts loading strategies</h1>
 									<img src="./img/googlefonts.jpg" style="border: none; box-shadow: none;">
 								</section>
-								
-								<!-- <section> -->
-									<!-- <section>
-										<h1>Terms</h1>
-									</section> -->
-<!-- 
-									<section>
-										<h2>System fonts</h2>
-										<p>Fonts available locally on an operating system without making any network requests.</p>
-									</section> -->
-<!-- 
-									<section>
-										<img src="./img/system.png" style="border: none; box-shadow: none;">
-									</section> -->
+			
 									
 									<section>
 										<h2>FOIT</h2>
@@ -70,13 +57,12 @@
 									</section>
 
 
-
-									<section data-background-iframe="https://zachleat.com/foitfout/" data-background-interactive>
+									<!-- <section data-background-iframe="https://zachleat.com/foitfout/" data-background-interactive>
 										<div
 											style="position: absolute; width: 30%; right: 0; top: -100px; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
 											<h2 style="color: #fff;"><b>demo</b>: FOIT and FOUT comparison</h2>
 										</div>
-									</section>
+									</section> -->
 
 									<!-- <section>
 										<h2>FOIT vs. FOUT ?</h2>
@@ -90,9 +76,7 @@
 										<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
 									</section> -->
 
-								<!-- </section> -->
 
-								<!-- <section> -->
 									<section>
 										<h1>Strategies</h1>
 									</section>
@@ -121,7 +105,29 @@
 										<p style="font-size: 36px; text-align: left;">👎 Limited availability. Very few system fonts are available cross platform.</p>
 									</section>
 
-								<!-- minimize font size -->
+
+
+									<section>
+										<h2>Unceremonious <code>@font-face</code></h2>
+										<p style="color: #666; font-size: 30px; letter-spacing: 0.2px;">Just add a naked CSS <code>@font-face</code> block with links to your file fonts</p>
+										<pre><code class="css" data-trim>
+@font-face {
+	font-family: FontName;
+	src: url('fontname.woff2') format('woff2'),
+	     url('fontname.woff') format('woff');
+}
+										</code></pre>
+									</section>
+									
+									<section>
+										<h2>Unceremonious <code>@font-face</code>: pros and cons</h2>
+										<p style="font-size: 36px; text-align: left;">👍 Good rendering performance in IE and Edge: <b>no FOIT</b></p>
+										<hr>
+										<p style="font-size: 36px; text-align: left;">👎 Bad rendering performance <b>everywhere else</b>: maximum 3 second FOIT in most modern browsers (and switches to FOUT if load takes longer)</p>
+									</section>
+
+
+
 
 									<section>
 										<h2><span style="font-size: 55px; display: inline-block; margin-bottom: 30px;">🐢🐇</span><br>MAKE FONT FILES SMALLER</h2>
@@ -138,6 +144,8 @@
 										<img src="./img/woff2.png" style="border: none; box-shadow: none;" height="300">
 									</section>
 
+
+
 									<section>	
 										<h3><em>Strategy:</em> Subset your fonts</h3>
 										<p style="color: #666; font-size: 30px;">(if language and licensing requirements allow)</p>									
@@ -148,9 +156,11 @@
 									</section>
 
 									<section>
-										<h3>Fonts Subsetting</h3>
-										<img src="./img/subsetting.jpg" style="border: none; box-shadow: none;" height="600">
+										<h3>Fonts Subsetting: example</h3>
+										<img src="./img/subsetting.jpg" style="border: none; box-shadow: none;" height="460">
 									</section>
+
+
 
 
 									<section>
@@ -159,7 +169,7 @@
 
 									<section>
 										<h2><em>Strategy:</em> Use <code>preload</code></h2>
-										<p style="color: #666;">Add <code class="css">&lt;link rel="preload"&gt;</code><br>to fetch your font sooner:</p>
+										<p style="color: #666; font-size: 34px;">Add <code class="css">&lt;link rel="preload"&gt;</code><br>to fetch your font sooner:</p>
 <pre><code>
 <link rel="preload" href="font.woff2"
 as="font"
@@ -176,7 +186,6 @@ type="font/woff2">
 									</section>
 
 
-									<!--  -->
 
 									<section>
 										<h2><span style="font-size: 55px;">🚀</span><br>PRIORITIZE READABLE TEXT</h2>
@@ -226,7 +235,7 @@ type="font/woff2">
 										</section> -->
 										
 										<section>
-											<h2><code>font-display</code></h2>
+											<h3><code>font-display</code>: browser support</h3>
 											<img src="./img/font-display.png" style="border: none; box-shadow: none;">
 										</section>
 										
@@ -248,97 +257,65 @@ type="font/woff2">
 
 									<section>
 										<h3>CSS Font Loading API</h3>
-
 										<p style="font-size: 36px; text-align: left;">👍 Protects from FOIT</p>
 										<p style="font-size: 36px; text-align: left;">👍Easy to group requests into a single repaint (just use one class for multiple web font loads)</p>
 										<hr>
 										<p style="font-size: 36px; text-align: left;">👎 Needs strict control. A single use of a <code>font-family</code> without the <code>loaded</code> class will likely trigger a FOIT.</p>
 									</section>
 
-								<!-- <section> -->
+
 									<section>
+										<h3>CSS Font Loading API polyfill:<br>Font Face Observer</h3>
+										<p style="color: #666; font-size: 34px;">The principle is the same:</p>
+										<pre><code class="js">
+var font = new FontFaceObserver('YourFontName');
+
+font.load().then(function () {
+  console.log('YourFontName has loaded.');
+});
+</code></pre>
+<p style="color: #666; font-size: 30px;"><a href="https://fontfaceobserver.com/">https://fontfaceobserver.com/</a></p>
+									</section>
+																
+									<section>
+										<h3><em>Strategy:</em> FOFT (Flash of faux text)</h3>
+										<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
+									</section>
+
+									<!-- -->
+
+									<!-- <section>
 										<h2><span style="font-size: 55px; display: inline-block; margin-bottom: 30px;">🏁</span><br> REDUCE MOVEMENT<br>DURING PAGE LOAD</h2>
-										<p style="color: #666; font-size: 34px; ">Control behavior after a web font has loaded</p>
-									
-										<ul>
-											<li>
-Each independent @font-face block has its own loading life-cycle: own FOIT, FOUT, repaint and reflow. 
-											</li>
-											<li>When using 2 or more web fonts for a single family, it’s important to group the repaints together.</li>
-										</ul>
+										<p style="color: #666; font-size: 34px;">Control behavior after a web font has loaded</p>
 									</section>
 
 									<section>
 										<h3><em>Strategy:</em> Use the<br>CSS Font Loading API</h3>
-										<p style="color: #666; font-size: 34px; ">to group your repaints</p>
-									</section>
-								
-									<section>
-										<h3><em>Strategy:</em> Use Variable fonts</h3>
-									</section>
+										<p style="color: #666; font-size: 34px;">When using 2+ web fonts for a single font-family,<br>group the repaints together.</p>
+									</section> -->
+									
+									<!-- -->
 
 
 								<section>
-									<h2>Optimal solution 👌</h2>
+									<h2>Optimal (and simple) solution 👌</h2>
 									<ul style="line-height: 160%; font-size: 36px; list-style-type: square;">
 										<li>Download the fonts as WOFF2 and WOFF</li>
 										<li>Add <code class="css">&lt;link rel="preload"&gt;</code></li>
 										<li>Add <code class="css">@font-face</code> declaration with <code class="css">font-display: swap;</code></li>
 										<li>Use <code class="css">font-family</code> normally in rest of document</li>
 									</ul>
-								</section>
-									<!-- <section>
-										<h2>Unceremonious <code>@font-face</code></h2>
-										<p style="color: #666; font-size: 30px; letter-spacing: 0.2px;">Just add a CSS <code>@font-face</code> block with WOFF and WOFF2 formats</p>
-										<pre><code class="css" data-trim>
-@font-face {
-	font-family: FontName;
-	src: url('fontname.woff2') format('woff2'),
-	     url('fontname.woff') format('woff');
-}
-										</code></pre>
-									</section>
-
-
-
-									<section>
-										<h2>Unceremonious <code>@font-face</code>: pros and cons</h2>
-										<p style="font-size: 36px; text-align: left;">👍 Good rendering performance in IE and Edge: <b>no FOIT</b></p>
-										<hr>
-										<p style="font-size: 36px; text-align: left;">👎 Bad rendering performance <b>everywhere else</b>: maximum 3 second FOIT in most modern browsers (and switches to FOUT if load takes longer)</p>
-									</section> -->
-
-
-
-<!-- <section>
-									<h2>FOIT</h2>
-									<p>Flash of invisible text</p>
-									<img src="./img/foit.gif" style="border: none; box-shadow: none;">
+									<p style="color: #999; font-size: 25px; margin-top: 30px;">* More advanced (not CSS-only) solution: use the CSS Font Loading API with the polyfill</p>
 								</section>
 
 								<section>
-									<h2>FOUT</h2>
-									<p>Flash of unstyled text</p>
-									<img src="./img/fout.gif" style="border: none; box-shadow: none;">
+									<h2>Links</h2>
+									<ul style="line-height: 140%; font-size: 36px; list-style-type: square;">
+										<li style="margin-bottom: 20px;"><a href="https://www.zachleat.com/web/comprehensive-webfonts/">A comprehensive guide to font loading strategies</a><br>by Zach Leatherman</li>
+										<li style="margin-bottom: 20px;"><a href="https://www.bramstein.com/writing/web-font-loading-patterns.html">Web Font Loading Patterns</a><br>by Brem Stein — with examples of Font Face Ob­server usage</li>									
+										<li><a href="https://www.youtube.com/watch?v=4m0OEPOfxUU">Web Fonts are ▢▢▢ Rocket Science</a><br>talk by Zach Leatherman</li>
+									</ul>
 								</section>
-
-								<section>
-									<h2>FOFT</h2>
-									<p>Flash of faux text</p>
-									<img src="./img/font-synthesis.png" style="border: none; box-shadow: none;">
-								</section> -->
-
-<!-- <section>
-									<h3>Font style matcher</h3>
-									<p style="color: #666; font-size: 25px;">For example, Merriweather font is taller and wider than Georgia, so if you bump Georgia's font size up to 18px,
-									and its letter spacing to 0.1px you'll get a pretty close match:</p>
-									<img src="./img/FSM.png" style="border: none; box-shadow: none;">
-									<p style="font-size: 25px;"><a href="https://meowni.ca/font-style-matcher/">https://meowni.ca/font-style-matcher/</a>
-									</p>
-								</section> -->
-
-
-
 			</div>
 
 		</div>
